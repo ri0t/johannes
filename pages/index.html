@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>c-lib interface</title>
+
+
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/app.js"></script>
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="196x196" href="images/touch/chrome-touch-icon-196x196.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#3372DF">
+
+    <!-- build:css styles/components/main.min.css -->
+    <link rel="stylesheet" href="styles/h5bp.css">
+    <!-- endbuild -->
+
+</head>
+<body>
+<!-- Add your site or app content here -->
+<form id="add_book">
+    <input type="text" name="isbn">
+    <input type="submit" value="Send mal.">
+</form>
+
+
+
+<script lang="javascript">
+$("#add_book").submit(function(e){
+
+    e.preventDefault();
+
+    var data = {}
+    var Form = this;
+
+    //Gathering the Data
+    //and removing undefined keys(buttons)
+    $.each(this.elements, function(i, v){
+            var input = $(v);
+        data[input.attr("name")] = input.val();
+        delete data["undefined"];
+    });
+
+    //Form Validation goes here....
+
+    //Save Form Data........
+    $.ajax({
+        cache: false,
+        url : "http://localhost:5000/c-lib/api/v1.0/books",
+        type: "POST",
+        dataType : "json",
+        data : JSON.stringify(data),
+        context : Form,
+        success : function(callback){
+            //Where $(this) => context == FORM
+            console.log(JSON.parse(callback));
+            $(this).html("Success!");
+        },
+        error : function(xhr, ajaxOptions, thrownError){
+            $(this).html("Error!");
+            console.log(xhr, ajaxOptions, thrownError);
+        }
+    });
+});
+</script>
+
+
+
+<!-- Built with irrefutable hate using Web Starter Kit -->
+</body>
+</html>
