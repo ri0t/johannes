@@ -32,11 +32,42 @@
 <body>
 <!-- Add your site or app content here -->
 <form id="add_book">
+    <span>ISBN:</span>
     <input type="text" name="isbn">
-    <input type="submit" value="Send mal.">
+    <input type="submit" value="Submit">
 </form>
+<div id="status">Do something :)</div>
 
 
+<div id="detailform">
+<form id="details">
+    <span>Authors:</span>
+    <input type="text" name="authors">
+    <span>Title</span>
+    <input type="text" name="title">
+    <span>Year</span>
+    <input type="text" name="year">
+    <span>Publisher</span>
+    <input type="text" name="publisher">
+    <hr>
+    <span>Status</span>
+    <input type="text" name="status">
+    <span>Language</span>
+    <input type="text" name="language">
+    <span>Tags</span>
+    <input type="text" name="tags">
+    <span>Coordinates</span>
+    <input type="text" name="coordinates">
+    <span>Created</span>
+    <input type="text" name="created">
+    <span>Modified</span>
+    <input type="text" name="modified">
+    <hr>
+    <span>Comment</span>
+    <input type="text" name="comment">
+
+</form>
+</div>
 
 <script lang="javascript">
 $("#add_book").submit(function(e){
@@ -45,6 +76,9 @@ $("#add_book").submit(function(e){
 
     var data = {}
     var Form = this;
+    var FormStatus = $("#status")
+    var Details = $("#details")
+    var DetailForm = document.getElementById('detailform')
 
     //Gathering the Data
     //and removing undefined keys(buttons)
@@ -66,12 +100,19 @@ $("#add_book").submit(function(e){
         context : Form,
         success : function(callback){
             //Where $(this) => context == FORM
-            console.log(JSON.parse(callback));
-            $(this).html("Success!");
+            console.log(callback);
+            console.log(callback['book']);
+            FormStatus.html("Success: " + callback['status']);
+            $.each(callback['book'],function(key,value) {
+                Details.find("input[name='"+key+"']").val(value);
+            });
+            DetailForm.style.display = 'block';
+
         },
         error : function(xhr, ajaxOptions, thrownError){
-            $(this).html("Error!");
-            console.log(xhr, ajaxOptions, thrownError);
+            console.log(xhr);
+            DetailForm.style.display = 'none';
+            FormStatus.html("Error: " + xhr['responseText']);
         }
     });
 });
@@ -79,6 +120,6 @@ $("#add_book").submit(function(e){
 
 
 
-<!-- Built with irrefutable hate using Web Starter Kit -->
+<!-- Built with kind love -->
 </body>
 </html>

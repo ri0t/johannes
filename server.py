@@ -1,51 +1,30 @@
 #!/usr/bin/env python
 
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, send_from_directory
 from bson.objectid import ObjectId
+from utils.log import log
+
 
 import json
 import isbntools
 import sys, time, pymongo
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
-host = 'localhost'
-port = 27017
+log("Beginning.")
 
-books_list = [
-    {
-        'status': True,
-        'tags': [],
-        'comment': "",
-        'coordinates': (0, 0),
-        "Publisher": "Inventur-Verl.",
-        "Language": "ger",
-        "Title": "Sterbehilfe f\u00fcr Planeten ausgespielt",
-        "Authors": [
-            "Billa S."
-        ],
-        "ISBN-13": "3000085785",
-        "Year": "2002"
+db_host = 'localhost'
+db_port = 27017
 
-    },
-    {
-        'status': False,
-        'tags': [],
-        'comment': "",
-        'coordinates': (0, 0),
-        'Publisher': '',
-        'Language': '',
-        'Title': '',
-        'Authors': [],
-        'ISBN-13': '3000085785',
-        'Year': '2002'
-
-    },
-]
-
-dbclient = pymongo.MongoClient(host, port)
+dbclient = pymongo.MongoClient(db_host, db_port)
 db = dbclient['c-lib']
 books = db['books']
+
+log("Preparing routes.")
+
+@app.route('/')
+def root():
+    return app.send_static_file('index.html')
 
 
 @app.route('/c-lib/api/v1.0/books', methods=['GET'])
@@ -74,25 +53,28 @@ def add_book():
     try:
         jsonstuff = json.loads(request.data)
     except Exception as e:
-        print("JSON Decoding fail: ", e, request.data)
+        log("JSON Decoding fail: ", e, request.data)
 
     if not jsonstuff or not 'isbn' in jsonstuff or \
             isbntools.notisbn(jsonstuff['isbn']):
-        abort(400)
+        log("Invalid ISBN: ", jsonstuff)
+        return jsonify({'status': "INVALID ISBN"}), 400
     else:
-        print(jsonstuff)
         isbn = str(jsonstuff['isbn'])
 
-    print("ISBN entered:", isbn)
+    log("ISBN entered:", isbn)
 
-    if books.find_one({"isbn": isbn}) != None:
-        abort(400)
+    book = books.find_one({"isbn": isbn})
+    if book:
+        log("Book already entered")
+        book['_id'] = str(book['_id'])
+        return jsonify({'book': book, 'status': 'existant'}), 201
 
     try:
         meta = isbntools.meta(isbn, service=isbnservice)
-        print("META found:", meta)
+        log("META found:", meta)
     except Exception as e:
-        print("META not found: ", e)
+        log("META not found: ", e)
         meta = {'Publisher': "Unknown",
                 'Language': "Unknown",
                 'Title': "Unkown",
@@ -114,10 +96,12 @@ def add_book():
 
            }
 
-    print(book)
+    log(book)
     books.insert(book)
     book['_id'] = str(book['_id'])
-    return jsonify({'book': book}), 201
+    return jsonify({'book': book, 'status': 'created'}), 201
+
+log("Preparation done.")
 
 if __name__ == '__main__':
     app.run(debug=True)
