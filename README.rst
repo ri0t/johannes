@@ -1,13 +1,16 @@
+.. image:: https://raw.github.com/ri0t/johannes/master/doc/images/johannes_logo.png
+
 johannes
 ========
 
 A rather simple library management system. Dedicated to Johannes.
 
-
 Install
 =======
 
 You need mongodb and pymongo (ideally from your distro):
+
+::
 
     sudo apt-get install mongodb python-pymongo 
 
@@ -16,14 +19,16 @@ You need mongodb and pymongo (ideally from your distro):
     source venv/bin/activate
     pip install -r requirements.txt
 
-You could probably do this without site packages by linking the ones you
-need yourself, that is mostly bson and pymongo itself, afaik.
-
+| You could probably do this without site packages by linking the ones
+you
+| need yourself, that is mostly bson and pymongo itself, afaik.
 
 Running
 =======
 
 Just activate the venv and run the server:
+
+::
 
     source venv/bin/activate
     python server.py
@@ -35,8 +40,13 @@ Contribution
 
 To help out make this thing greater than it is, head over to
 
+::
+
     https://github.com/ri0t/johannes
+
 or
+
+::
 
     https://github.com/c-base/johannes
 
@@ -52,5 +62,5 @@ Authors
 
 This madness started off in June 2014.
 
-Heiko 'riot' Weinen <riot@c-base.org>
-Brain
+| Heiko 'riot' Weinen riot@c-base.org
+| Brain
