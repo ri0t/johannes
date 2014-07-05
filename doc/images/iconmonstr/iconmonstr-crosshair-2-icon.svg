@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- The icon can be used freely in both personal and commercial projects with no attribution required, but always appreciated. 
+You may NOT sub-license, resell, rent, redistribute or otherwise transfer the icon without express written permission from iconmonstr.com -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+<path id="crosshair-2-icon" d="M256,50C142.229,50,50,142.229,50,256c0,113.771,92.229,206,206,206c113.771,0,206-92.229,206-206
+	C462,142.229,369.771,50,256,50z M276,420.81v-73.861h-40v73.861C160.387,411.786,100.23,351.743,91.19,276h73.861v-40H91.19
+	c9.024-75.614,69.066-135.77,144.81-144.81v73.861h40V91.19c75.612,9.024,135.771,69.066,144.81,144.81h-73.861v40h73.861
+	C411.787,351.611,351.743,411.771,276,420.81z"/>
+</svg>

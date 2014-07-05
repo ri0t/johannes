@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- License Agreement at http://iconmonstr.com/license/ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+<path id="barcode-2-icon" fill-rule="evenodd" clip-rule="evenodd" d="M117,331.079V181.921h23.215v149.158H117z M162.318,331.079
+	V181.921h27.75v149.158H162.318z M211.979,331.079V181.921h13.611v149.16L211.979,331.079z M297.614,331.079V181.921h13.61v149.16
+	L297.614,331.079z M247.827,331.079l-0.001-149.158h27.749v149.16L247.827,331.079z M333.566,331.079v-149.16h23.217v149.16H333.566
+	z M377.978,331.079v-149.16L395,181.921v149.158H377.978z M407,150.485c9.926,0,18,8.074,18,18v175.029c0,9.926-8.074,18-18,18H105
+	c-9.926,0-18-8.074-18-18V168.485c0-9.926,8.074-18,18-18H407 M407,113.485H105c-30.376,0-55,24.624-55,55v175.029
+	c0,30.376,24.624,55,55,55h302c30.376,0,55-24.624,55-55V168.485C462,138.109,437.376,113.485,407,113.485z"/>
+</svg>

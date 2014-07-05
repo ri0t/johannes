@@ -1,6 +1,16 @@
-# letterbox.jpg
+# letterbox
 
+File: doc/images/letterbox.jpg
 Usage: Used as background image and in the logo.
 License: CC-BY-SA-2.0
 Description: A photography of a drawer with moveable type.
 URL: http://www.flickr.com/photos/tompagenet/8579276979
+
+
+# iconmonstr icons
+
+Files: doc/images/iconmonstr/*
+Usage: Various icons all over
+License: See /doc/licenses/iconmonstr.txt
+Description: Stock icons from iconmonstr.
+URL: http://iconmonstr.com

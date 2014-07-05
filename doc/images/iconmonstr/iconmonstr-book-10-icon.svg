@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- The icon can be used freely in both personal and commercial projects with no attribution required, but always appreciated. 
+You may NOT sub-license, resell, rent, redistribute or otherwise transfer the icon without express written permission from iconmonstr.com -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+<path id="book-10-icon" d="M448,207.951h-38v-85h38V207.951z M448,317.951h-38v-85h38V317.951z M448,427.617h-38v-85h38V427.617z
+	 M124,122.528c-23.611,0-23.611-34.528,0-34.528c16.904,0,324,0,324,0V50H114c-27.613,0-50,22.386-50,50v312
+	c0,27.614,22.387,50,50,50h271.582V122.528C380.6,122.528,143.098,122.528,124,122.528z M345.582,422H155.527V163.098h190.055V422z"
+	/>
+</svg>
