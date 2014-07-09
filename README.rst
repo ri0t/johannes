@@ -15,7 +15,7 @@ You need mongodb and pymongo (ideally from your distro):
     sudo apt-get install mongodb python-pymongo 
 
     cd ~/src/johannes
-    virtualenv --site-packages venv
+    virtualenv --system-site-packages venv
     source venv/bin/activate
     pip install -r requirements.txt
 
