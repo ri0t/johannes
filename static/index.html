@@ -8,7 +8,9 @@
     <title>c-lib interface</title>
 
 
+
     <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
     <script src="scripts/app.js"></script>
 
     <!-- Add to homescreen for Chrome on Android -->
@@ -25,24 +27,70 @@
     <meta name="msapplication-TileColor" content="#3372DF">
 
     <!-- build:css styles/components/main.min.css -->
-    <link rel="stylesheet" href="styles/h5bp.css">
+    <link rel="stylesheet" href="css/h5bp.css">
+    <link rel="stylesheet" href="css/main.css">
     <!-- endbuild -->
 
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
 </head>
 <body>
-<!-- Add your site or app content here -->
+
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">c-lib</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        </li>
+      </ul>
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search (TUT NOCH NICH)">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      <p class="nav navbar-text" id="status">Do something :)</p>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://github.com/ri0t/johannes/issues" target="_blank">Report Bugs</a></li>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Login</a></li>
+            <li><a href="#">Logout</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Settings</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
 <form id="add_book">
     <span>ISBN:</span>
     <input type="text" name="isbn">
     <input type="submit" value="Submit">
 </form>
-<div id="status">Do something :)</div>
 
 
 <div id="detailform">
 <form id="details">
     <span>Title</span>
-    <input type="text" name="title" size="42">
+    <input type="text" name="title" size="80">
+    <br>
     <span>ISBN</span>
     <input type="text" name="isbn" size="13">
     <span>Authors</span>
@@ -60,13 +108,14 @@
     <input type="text" name="tags">
     <span>Coordinates</span>
     <input type="text" name="coordinates">
+    <br>
     <span>Created</span>
     <input type="text" name="created">
     <span>Modified</span>
     <input type="text" name="modified">
-    <hr>
+    <br>
     <span>Comment</span>
-    <textarea name="comment" rows="23" cols="80">
+    <textarea name="comment" rows="12" cols="55">
     </textarea>
     <input type="submit" value="Store">
 </form>
@@ -76,6 +125,7 @@
 $("#add_book").submit(function(e){
 
     e.preventDefault();
+    console.log("Form overridden");
 
     var data = {}
     var Form = this;
@@ -115,9 +165,10 @@ $("#add_book").submit(function(e){
 
         },
         error : function(xhr, ajaxOptions, thrownError){
-            console.log(xhr);
+            err = JSON.parse(xhr['responseText']);
+            console.log(err);
             DetailForm.style.display = 'none';
-            FormStatus.html("Error: " + xhr['responseText']);
+            FormStatus.html("Error: " + err['status']);
         }
     });
 });
