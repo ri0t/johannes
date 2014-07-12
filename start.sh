@@ -1,5 +1,6 @@
 #!/bin/sh
 
-. ./venv/bin/activate
+JO=/home/c-lib/src/johannes
+. $JO/venv/bin/activate
 
-python server.py
+python $JO/server.py &
