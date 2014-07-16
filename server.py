@@ -68,7 +68,7 @@ def add_book():
     if book:
         log("Book already entered")
         book['_id'] = str(book['_id'])
-        return jsonify({'book': book, 'status': 'existant'}), 201
+        return jsonify({'book': book, 'status': 'Book existant'}), 201
 
     try:
         meta = isbntools.meta(isbn, service=isbnservice)
@@ -99,7 +99,7 @@ def add_book():
     log(book)
     books.insert(book)
     book['_id'] = str(book['_id'])
-    return jsonify({'book': book, 'status': 'created'}), 201
+    return jsonify({'book': book, 'status': 'Book created'}), 201
 
 log("Preparation done.")
 

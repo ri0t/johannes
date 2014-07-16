@@ -329,6 +329,6 @@ main {
   }
 }
 
-#hidden {
-    display: hidden;
-}
+//.navbar-text {
+//    color: white;
+//}
