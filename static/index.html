@@ -82,7 +82,7 @@
 
 <div class="container">
 <div class="well">
-<form id="add_book">
+<form id="isbn_form">
     <span>ISBN:</span>
     <input id="isbn-input" type="text" name="isbn">
     <input type="submit" value="Submit">
@@ -90,8 +90,8 @@
 </div>
 
 <div class="well">
-<div id="detailform">
-<form id="details">
+<div id="details">
+<form id="detail_form">
     <span>Title</span>
     <input type="text" name="title" size="80">
     <br>
@@ -111,7 +111,7 @@
     <span>Tags</span>
     <input type="text" name="tags">
     <span>Coordinates</span>
-    <input type="text" name="coordinates">
+    <input type="text" name="coordinates" size="10">
     <br>
     <span>Created</span>
     <input type="text" name="created">
@@ -119,6 +119,7 @@
     <input type="text" name="modified">
     <br>
     <span>Comment</span>
+    <br>
     <textarea name="comment" rows="12" cols="55">
     </textarea>
     <input type="submit" value="Store">
@@ -129,14 +130,32 @@
 
 <script lang="javascript">
 
+var detail_form = document.getElementById('details')
+
+function details_hide(e) {
+    detail_form.style.display = 'none';
+}
+
+function details_show(e) {
+    detail_form.style.display = 'block';
+}
+
+
+
 function focus_isbn(e) {
     var isbninput = document.getElementById("isbn-input");
     isbninput.focus();
 };
 
-window.onload = focus_isbn();
+window.onload = function() {
+    details_hide();
 
-$("#add_book").submit(function(e){
+    focus_isbn();
+}
+
+// $("#
+
+$("#isbn_form").submit(function(e){
 
     e.preventDefault();
     console.log("Form overridden");
@@ -144,9 +163,9 @@ $("#add_book").submit(function(e){
     var data = {}
     var Form = this;
     var FormStatus = $("#status")
-    var Details = $("#details")
-    var AddbookForm = $("#add_book")
-    var DetailForm = document.getElementById('detailform')
+    var DetailForm = $("#detail_form")
+    var ISBNForm = $("#isbn_form")
+
 
     //Gathering the Data
     //and removing undefined keys(buttons)
@@ -172,16 +191,17 @@ $("#add_book").submit(function(e){
             console.log(callback['book']);
             FormStatus.html("Success: " + callback['status']);
             $.each(callback['book'],function(key,value) {
-                Details.find("input[name='"+key+"']").val(value);
+                DetailForm.find("input[name='"+key+"']").val(value);
             });
-            DetailForm.style.display = 'block';
-            AddbookForm[0].reset();
+            detail_form.style.display = 'block';
+            ISBNForm[0].reset();
+            details_show();
 
         },
         error : function(xhr, ajaxOptions, thrownError){
             err = JSON.parse(xhr['responseText']);
             console.log(err);
-            DetailForm.style.display = 'none';
+            details_hide();
             FormStatus.html("Error: " + err['status']);
         }
     });
