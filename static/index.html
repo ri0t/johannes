@@ -190,6 +190,21 @@ $("#update_form").submit(function(e){
     e.preventDefault();
     bookId = $('#_id').val();
     console.log("Updating book with id", bookId );
+
+    $.ajax({
+        url: 'http://localhost:5000/c-lib/api/v1.0/books/'+bookId,
+        type: 'UPDATE',
+        dataType : "json",
+        data : details_get(),
+        success: function(result) {
+            status_set("Updated successfully.");
+        },
+        error: function(result) {
+            console.log("Error: ", result);
+            status_set("Update failed :(");
+        }
+    });
+
 });
 
 function details_fill(book) {
@@ -200,18 +215,12 @@ function details_fill(book) {
 }
 
 function details_get() {
-    var data = {}
-    var form = $("#detail_form")
-    //Gathering the Data
-    //and removing undefined keys(buttons)
-    $.each(form.elements, function(i, v){
-            var input = $(v);
-        data[input.attr("name")] = input.val();
-        delete data["undefined"];
+    var formObj = {};
+    var inputs = $('#detail_form').serializeArray();
+    $.each(inputs, function (i, input) {
+        formObj[input.name] = input.value;
     });
-
-    return data;
-
+    return formObj;
 }
 
 $("#isbn_form").submit(function(e){

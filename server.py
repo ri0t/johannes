@@ -42,15 +42,36 @@ def get_book_details(book_id):
     result["_id"] = str(result["_id"])
     return jsonify({'details': result})
 
+@app.route('/c-lib/api/v1.0/books/<string:book_id>', methods=['UPDATE'])
+def update_book(book_id):
+
+    book = {"_id": ObjectId(book_id)}
+    log("Updating book with _id:", book_id)
+
+    details = dict(request.form)
+    del(details['_id'])
+    log("Updated record: ", details)
+
+
+    log("Updating with: ", details)
+
+    result = books.update(book, details)
+
+    return jsonify({'result': result})
+
+
+
 @app.route('/c-lib/api/v1.0/books/delete/<string:book_id>', methods=['DELETE'])
 def delete_book(book_id):
 
-    print("Deleting book with _id:", book_id)
+    log("Deleting book with _id:", book_id)
     book = {"_id": ObjectId(book_id)}
 
     result = books.remove(book)
 
     return jsonify({'result': result})
+
+
 
 
 @app.route('/c-lib/api/v1.0/books', methods=['POST'])
