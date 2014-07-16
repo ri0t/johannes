@@ -91,7 +91,15 @@
 
 <div class="well">
 <div id="details">
+    <form id="delete_form" method="delete">
+        <input type="submit" value="Delete">
+    </form>
+        <form id="update_form" method="update">
+        <input type="submit" value="Update">
+    </form>
+
 <form id="detail_form">
+    <input id="_id" type="hidden" name="_id">
     <span>Title</span>
     <input type="text" name="title" size="80">
     <br>
@@ -120,9 +128,8 @@
     <br>
     <span>Comment</span>
     <br>
-    <textarea name="comment" rows="12" cols="55">
+    <textarea name="comment" rows="12" cols="80">
     </textarea>
-    <input type="submit" value="Store">
 </form>
 </div>
 </div>
@@ -130,17 +137,22 @@
 
 <script lang="javascript">
 
-var detail_form = document.getElementById('details')
+var details = document.getElementById('details')
+var FormStatus = $("#status")
+var DetailForm = $("#detail_form")
+var ISBNForm = $("#isbn_form")
 
 function details_hide(e) {
-    detail_form.style.display = 'none';
+    details.style.display = 'none';
 }
 
 function details_show(e) {
-    detail_form.style.display = 'block';
+    details.style.display = 'block';
 }
 
-
+function status_set(msg) {
+    FormStatus.html(msg);
+}
 
 function focus_isbn(e) {
     var isbninput = document.getElementById("isbn-input");
@@ -153,27 +165,65 @@ window.onload = function() {
     focus_isbn();
 }
 
-// $("#
-
-$("#isbn_form").submit(function(e){
-
+$("#delete_form").submit(function(e){
     e.preventDefault();
-    console.log("Form overridden");
+    bookId = $('#_id').val();
+    console.log("Deleting book with id", bookId );
+    if (confirm('Are you sure to delete this book?')) {
+        $.ajax({
+            url: 'http://localhost:5000/c-lib/api/v1.0/books/delete/'+bookId,
+            type: 'DELETE',
+            success: function(result) {
+                status_set("Deleted successfully.");
+            },
+            error: function(result) {
+                console.log("Error: ", result);
+                status_set("Deletion failed :(");
+            }
+        });
+    } else {
+        console.log("Chickened out.");
+    }
+});
 
+$("#update_form").submit(function(e){
+    e.preventDefault();
+    bookId = $('#_id').val();
+    console.log("Updating book with id", bookId );
+});
+
+function details_fill(book) {
+    $.each(book,function(key,value) {
+        DetailForm.find("input[name='"+key+"']").val(value);
+    });
+
+}
+
+function details_get() {
     var data = {}
-    var Form = this;
-    var FormStatus = $("#status")
-    var DetailForm = $("#detail_form")
-    var ISBNForm = $("#isbn_form")
-
-
+    var form = $("#detail_form")
     //Gathering the Data
     //and removing undefined keys(buttons)
-    $.each(this.elements, function(i, v){
+    $.each(form.elements, function(i, v){
             var input = $(v);
         data[input.attr("name")] = input.val();
         delete data["undefined"];
     });
+
+    return data;
+
+}
+
+$("#isbn_form").submit(function(e){
+
+    e.preventDefault();
+    console.log("ISBN sending");
+
+    var Form = this;
+
+
+    var data = {'isbn': $('#isbn-input').val()};
+    console.log("Data:" , data);
 
     //Form Validation goes here....
 
@@ -187,25 +237,24 @@ $("#isbn_form").submit(function(e){
         context : Form,
         success : function(callback){
             //Where $(this) => context == FORM
-            console.log(callback);
-            console.log(callback['book']);
-            FormStatus.html("Success: " + callback['status']);
-            $.each(callback['book'],function(key,value) {
-                DetailForm.find("input[name='"+key+"']").val(value);
-            });
-            detail_form.style.display = 'block';
-            ISBNForm[0].reset();
+            console.log("Callback: ", callback);
+            console.log("Book: ", callback['book']);
+            status_set("Success: " + callback['status']);
+            book = callback['book'];
+            details_fill(book);
             details_show();
+            ISBNForm[0].reset();
 
         },
         error : function(xhr, ajaxOptions, thrownError){
+            console.log("XHR: ", xhr);
             err = JSON.parse(xhr['responseText']);
             console.log(err);
             details_hide();
-            FormStatus.html("Error: " + err['status']);
+            status_set("Error: " + err['status']);
         }
     });
-    focus_isbn();
+       focus_isbn();
 });
 </script>
 
