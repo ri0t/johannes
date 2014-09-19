@@ -18,9 +18,20 @@ db_port = 27017
 
 dbclient = pymongo.MongoClient(db_host, db_port)
 db = dbclient['c-lib']
-books = db['books']
+booksdb = db['books']
+journaldb = db['journal']
 
 log("Preparing routes.")
+
+
+def journal(activity, detail):
+    what = {'t': time.time(),
+            'a': str(activity),
+            'd': detail,
+    }
+    journaldb.insert(what)
+    log("Journal updated: ", activity)
+
 
 @app.route('/')
 def root():
@@ -30,15 +41,24 @@ def root():
 @app.route('/c-lib/api/v1.0/books', methods=['GET'])
 def get_books():
     results = []
-    for doc in books.find():
+    for doc in booksdb.find():
         doc['_id'] = str(doc['_id'])
         results.append(doc)
     return jsonify({'books': results})
 
 
+@app.route('/c-lib/api/v1.0/journal', methods=['GET'])
+def get_journal():
+    results = []
+    for doc in journaldb.find():
+        doc['_id'] = str(doc['_id'])
+        results.append(doc)
+    return jsonify({'journal': results})
+
+
 @app.route('/c-lib/api/v1.0/books/<string:book_id>', methods=['GET'])
 def get_book_details(book_id):
-    result = books.find_one({"_id": ObjectId(book_id)})
+    result = booksdb.find_one({"_id": ObjectId(book_id)})
     result["_id"] = str(result["_id"])
     return jsonify({'details': result})
 
@@ -48,6 +68,9 @@ def update_book(book_id):
     book = {"_id": ObjectId(book_id)}
     log("Updating book with _id:", book_id)
 
+    original = booksdb.find_one(book)
+
+    log(request.form)
     details = dict(request.form)
     del(details['_id'])
     log("Updated record: ", details)
@@ -55,8 +78,9 @@ def update_book(book_id):
 
     log("Updating with: ", details)
 
-    result = books.update(book, details)
+    result = booksdb.update(book, details)
 
+    journal('UPDATE', {'in': details, 'out': original})
     return jsonify({'result': result})
 
 
@@ -67,16 +91,18 @@ def delete_book(book_id):
     log("Deleting book with _id:", book_id)
     book = {"_id": ObjectId(book_id)}
 
-    result = books.remove(book)
+    original = booksdb.find_one(book)
 
+    result = booksdb.remove(book)
+
+    journal('DELETE', {'in': None, 'out': original})
     return jsonify({'result': result})
 
 
 
 
 @app.route('/c-lib/api/v1.0/books', methods=['POST'])
-def add_book():
-
+def add_book_by_isbn():
     isbnservice = "wcat"
 
     request.get_data()
@@ -89,13 +115,13 @@ def add_book():
     if not jsonstuff or not 'isbn' in jsonstuff or \
             isbntools.notisbn(jsonstuff['isbn']):
         log("Invalid ISBN: ", jsonstuff)
-        return jsonify({'status': "INVALID ISBN"}), 400
+        return jsonify({'status': "Invalid ISBN"}), 400
     else:
         isbn = str(jsonstuff['isbn'])
 
     log("ISBN entered:", isbn)
 
-    book = books.find_one({"isbn": isbn})
+    book = booksdb.find_one({"isbn": isbn})
     if book:
         log("Book already entered")
         book['_id'] = str(book['_id'])
@@ -111,6 +137,8 @@ def add_book():
                 'Title': "Unkown",
                 'Authors': ["Unkown"],
                 'Year': "Unkown"}
+        # TODO: Allow/offer manual entry
+        return jsonify({'status': "Metaserver lookup failed."}), 504
     book = {
                'isbn': isbn,
                'publisher': meta['Publisher'],
@@ -128,8 +156,11 @@ def add_book():
            }
 
     log(book)
-    books.insert(book)
+    booksdb.insert(book)
     book['_id'] = str(book['_id'])
+
+    journal('ADD', {'in': book, 'out': None})
+
     return jsonify({'book': book, 'status': 'Book created'}), 201
 
 log("Preparation done.")
