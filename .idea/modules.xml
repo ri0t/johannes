@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/c-lib-backend.iml" filepath="$PROJECT_DIR$/.idea/c-lib-backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/johannes.iml" filepath="$PROJECT_DIR$/.idea/johannes.iml" />
     </modules>
   </component>
 </project>

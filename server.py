@@ -4,9 +4,11 @@ from flask import Flask, jsonify, request, abort, send_from_directory
 from bson.objectid import ObjectId
 from utils.log import log
 
+from pprint import pprint
 
 import json
 import isbntools
+from voluptuous import Schema, Optional, Required, All, Any, Range, Match
 import sys, time, pymongo
 
 app = Flask(__name__, static_url_path='')
@@ -20,6 +22,22 @@ dbclient = pymongo.MongoClient(db_host, db_port)
 db = dbclient['c-lib']
 booksdb = db['books']
 journaldb = db['journal']
+
+book_schema = Schema({
+    Optional('_id'): Match('^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)'),
+    Required('authors'): [unicode],
+    Required('comment'): unicode,
+    Required('coordinates'): (int, int),
+    Required('created'): float,
+    Required('isbn'): Match('^(97(8|9))?\d{9}(\d|X)$'),
+    Required('language'): unicode,
+    Required('modified'): float,
+    Required('publisher'): unicode,
+    Required('status'): str,  # TODO: DUH!
+    Required('tags'): [unicode],
+    Required('title'): unicode,
+    Required('year'): int
+})
 
 log("Preparing routes.")
 
@@ -60,6 +78,8 @@ def get_journal():
 def get_book_details(book_id):
     result = booksdb.find_one({"_id": ObjectId(book_id)})
     result["_id"] = str(result["_id"])
+    pprint(result)
+    log("Returning book search for", book_id)
     return jsonify({'details': result})
 
 @app.route('/c-lib/api/v1.0/books/<string:book_id>', methods=['UPDATE'])
@@ -75,12 +95,20 @@ def update_book(book_id):
     del(details['_id'])
     log("Updated record: ", details)
 
+    try:
+        valid_book = book_schema(details)
+        pprint(valid_book)
+        log('Book validated.')
+    except Exception as ve:
+        log(ve)
+        return jsonify({'error': unicode(ve), 'status': 'Error'}), 415
 
-    log("Updating with: ", details)
+    log("Updating with: ", valid_book)
 
-    result = booksdb.update(book, details)
+    result = booksdb.update(book, valid_book)
 
-    journal('UPDATE', {'in': details, 'out': original})
+    journal('UPDATE', {'in': valid_book, 'out': original})
+
     return jsonify({'result': result})
 
 
@@ -124,7 +152,9 @@ def add_book_by_isbn():
     book = booksdb.find_one({"isbn": isbn})
     if book:
         log("Book already entered")
+        pprint(book)
         book['_id'] = str(book['_id'])
+
         return jsonify({'book': book, 'status': 'Book existant'}), 201
 
     try:
@@ -139,27 +169,39 @@ def add_book_by_isbn():
                 'Year': "Unkown"}
         # TODO: Allow/offer manual entry
         return jsonify({'status': "Metaserver lookup failed."}), 504
-    book = {
-               'isbn': isbn,
+
+    try:
+        book = {
+            'isbn': isbn,
                'publisher': meta['Publisher'],
                'language': meta['Language'],
                'title': meta['Title'],
                'authors': meta['Authors'],
-               'year': meta['Year'],
+               'year': int(meta['Year']),
                'created': time.time(),
                'modified': time.time(),
                'coordinates': (0, 0),
-               'status': False,
+               'status': 'None',
                'tags': [],
-               'comment': "",
-
-           }
+               'comment': u""
+        }
+    except TypeError:
+        return jsonify({'error'}), 415
 
     log(book)
-    booksdb.insert(book)
-    book['_id'] = str(book['_id'])
 
-    journal('ADD', {'in': book, 'out': None})
+    try:
+        valid_book = book_schema(book)
+        pprint(valid_book)
+        log('Book validated.')
+    except Exception as ve:
+        log(ve)
+        return jsonify({'error': unicode(ve), 'status': 'Error'}), 415
+
+    booksdb.insert(valid_book)
+    valid_book['_id'] = str(valid_book['_id'])
+
+    journal('ADD', {'in': valid_book, 'out': None})
 
     return jsonify({'book': book, 'status': 'Book created'}), 201
 

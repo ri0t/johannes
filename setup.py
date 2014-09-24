@@ -30,18 +30,20 @@ def include_readme():
     readme.close()
     return "".join(include)
 
+
 def is_package(path):
     return (
         os.path.isdir(path) and
         os.path.isfile(os.path.join(path, '__init__.py'))
-        )
+    )
 
-def find_packages(path, base="" ):
+
+def find_packages(path, base=""):
     """ Find all packages in path """
     packages = {}
     for item in os.listdir(path):
         dir = os.path.join(path, item)
-        if is_package( dir ):
+        if is_package(dir):
             if base:
                 module_name = "%(base)s.%(item)s" % vars()
             else:
@@ -50,40 +52,42 @@ def find_packages(path, base="" ):
             packages.update(find_packages(dir, module_name))
     return packages
 
+
 packages = find_packages(".")
 package_names = packages.keys()
 
-setup(name = "johannes",
-      version = "0.0.3",
-      description = "johannes",
+setup(name="johannes",
+      version="0.0.3",
+      description="johannes",
 
-      author = "Heiko 'riot' Weinen",
-      author_email = "riot@c-base.org",
-      url = "https://github.com/ri0t/johannes",
-      license ="GNU General Public License v3",
-      packages = package_names,
-      package_dir = packages,
-      scripts = [
-                  'server.py',
-                ],
+      author="Heiko 'riot' Weinen",
+      author_email="riot@c-base.org",
+      url="https://github.com/ri0t/johannes",
+      license="GNU General Public License v3",
+      packages=package_names,
+      package_dir=packages,
+      scripts=[
+          'server.py',
+      ],
       data_files=[
-                    ('/etc/init.d', ["etc/init.d/johannes"]),
-                    ('/etc/johannes', ["etc/johannes/config.json"])
-                 ],
+          ('/etc/init.d', ["etc/init.d/johannes"]),
+          ('/etc/johannes', ["etc/johannes/config.json"])
+      ],
 
-      long_description = include_readme(),
+      long_description=include_readme(),
       # These versions are not strictly checked, older ones may or may not work.
-      install_requires = [
-                          #'CherryPy==3.3.0',
-                          #'Axon==1.7.0',
-                          #'Kamaelia==1.1.2',
-                          #'Pynmea==0.3.1',
-                          #'Mako==0.9.1',
-                          #'jsonpickle==0.1',
-                          'pymongo==2.6.3',
-                          'bson==0.3.3',
-                          'isbntools==3.3.6',
-                          'flask==0.10.1'
-                          ]
+      install_requires=[
+          #'CherryPy==3.3.0',
+          #'Axon==1.7.0',
+          #'Kamaelia==1.1.2',
+          #'Pynmea==0.3.1',
+          #'Mako==0.9.1',
+          #'jsonpickle==0.1',
+          #'pymongo==2.6.3',
+          #'bson==0.3.3',
+          'isbntools==3.3.6',
+          'flask==0.10.1',
+          'voluptuous==0.8.5',
+      ]
 
-      )
+)
