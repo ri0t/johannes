@@ -42,7 +42,7 @@ count = 0
 logfile = "/var/log/hfos/service.log"
 verbosity = {'global': debug,
              'file': off,
-             'console': off}
+             'console': debug}
 
 start = time.time()
 

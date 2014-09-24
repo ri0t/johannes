@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 
-from flask import Flask, jsonify, request, abort, send_from_directory
 from bson.objectid import ObjectId
-from utils.log import log
-
 from pprint import pprint
-
 import json
+import time
+import pymongo
+
+from flask import Flask, jsonify, request
+from voluptuous import Schema, Optional, Required, Match
+
+from utils.log import log
 import isbntools
-from voluptuous import Schema, Optional, Required, All, Any, Range, Match
-import sys, time, pymongo
+
 
 app = Flask(__name__, static_url_path='')
 
@@ -25,16 +27,16 @@ journaldb = db['journal']
 
 book_schema = Schema({
     Optional('_id'): Match('^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)'),
-    Required('authors'): [unicode],
+    Required('authors'): unicode,
     Required('comment'): unicode,
-    Required('coordinates'): (int, int),
+    Required('coordinates'): [int, int],
     Required('created'): float,
     Required('isbn'): Match('^(97(8|9))?\d{9}(\d|X)$'),
     Required('language'): unicode,
     Required('modified'): float,
     Required('publisher'): unicode,
-    Required('status'): str,  # TODO: DUH!
-    Required('tags'): [unicode],
+    Required('status'): unicode,  # TODO: DUH!
+    Required('tags'): unicode,
     Required('title'): unicode,
     Required('year'): int
 })
@@ -82,17 +84,18 @@ def get_book_details(book_id):
     log("Returning book search for", book_id)
     return jsonify({'details': result})
 
+
 @app.route('/c-lib/api/v1.0/books/<string:book_id>', methods=['UPDATE'])
 def update_book(book_id):
-
     book = {"_id": ObjectId(book_id)}
     log("Updating book with _id:", book_id)
 
     original = booksdb.find_one(book)
 
-    log(request.form)
-    details = dict(request.form)
-    del(details['_id'])
+    log("Incoming json:", request.json)
+    details = request.json
+
+    del (details['_id'])
     log("Updated record: ", details)
 
     try:
@@ -112,10 +115,8 @@ def update_book(book_id):
     return jsonify({'result': result})
 
 
-
 @app.route('/c-lib/api/v1.0/books/delete/<string:book_id>', methods=['DELETE'])
 def delete_book(book_id):
-
     log("Deleting book with _id:", book_id)
     book = {"_id": ObjectId(book_id)}
 
@@ -125,8 +126,6 @@ def delete_book(book_id):
 
     journal('DELETE', {'in': None, 'out': original})
     return jsonify({'result': result})
-
-
 
 
 @app.route('/c-lib/api/v1.0/books', methods=['POST'])
@@ -151,7 +150,7 @@ def add_book_by_isbn():
 
     book = booksdb.find_one({"isbn": isbn})
     if book:
-        log("Book already entered")
+        log("Book known")
         pprint(book)
         book['_id'] = str(book['_id'])
 
@@ -173,17 +172,17 @@ def add_book_by_isbn():
     try:
         book = {
             'isbn': isbn,
-               'publisher': meta['Publisher'],
-               'language': meta['Language'],
-               'title': meta['Title'],
-               'authors': meta['Authors'],
-               'year': int(meta['Year']),
-               'created': time.time(),
-               'modified': time.time(),
-               'coordinates': (0, 0),
-               'status': 'None',
-               'tags': [],
-               'comment': u""
+            'publisher': unicode(meta['Publisher']),
+            'language': unicode(meta['Language']),
+            'title': unicode(meta['Title']),
+            'authors': str(meta['Authors']),
+            'year': int(meta['Year']),
+            'created': time.time(),
+            'modified': time.time(),
+            'coordinates': [0, 0],
+            'status': u'None',
+            'tags': [],
+            'comment': u''
         }
     except TypeError:
         return jsonify({'error'}), 415
@@ -204,6 +203,7 @@ def add_book_by_isbn():
     journal('ADD', {'in': valid_book, 'out': None})
 
     return jsonify({'book': book, 'status': 'Book created'}), 201
+
 
 log("Preparation done.")
 

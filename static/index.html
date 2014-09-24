@@ -38,101 +38,104 @@
 <body>
 
 <div class="navbar navbar-default navbar-inverse" role="navigation">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">c-lib</a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        </li>
-      </ul>
-      <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search (TUT NOCH NICH)">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">c-lib</a>
         </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>
-      <p class="nav navbar-text" id="status">Do something :)</p>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="https://github.com/ri0t/johannes/issues" target="_blank">Report Bugs</a></li>
-        </li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">Login</a></li>
-            <li><a href="#">Logout</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Settings</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search (TUT NOCH NICH)">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            <p class="nav navbar-text" id="status">Do something :)</p>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="https://github.com/ri0t/johannes/issues" target="_blank">Report Bugs</a></li>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Login</a></li>
+                        <li><a href="#">Logout</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Settings</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
 </div>
 
 <div class="container">
-<div class="well">
-<form id="isbn_form">
-    <span>ISBN:</span>
-    <input id="isbn-input" type="text" name="isbn">
-    <input type="submit" value="Submit">
-</form>
-</div>
+    <div class="well">
+        <form id="isbn_form">
+            <span>ISBN:</span>
+            <input id="isbn-input" type="text" name="isbn">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
 
-<div class="well">
-<div id="details">
-    <form id="delete_form" method="delete">
-        <input type="submit" value="Delete">
-    </form>
-        <form id="update_form" method="update">
-        <input type="submit" value="Update">
-    </form>
+    <div class="well">
+        <div id="details">
+            <form id="delete_form" method="delete">
+                <input type="submit" value="Delete">
+            </form>
+            <form id="update_form" method="update">
+                <input type="submit" value="Update">
+            </form>
 
-<form id="detail_form">
-    <input id="_id" type="hidden" name="_id">
-    <span>Title</span>
-    <input type="text" name="title" size="80">
-    <br>
-    <span>ISBN</span>
-    <input type="text" name="isbn" size="13">
-    <span>Authors</span>
-    <input type="text" name="authors" size="42">
-    <span>Year</span>
-    <input type="text" name="year" size="4">
-    <span>Publisher</span>
-    <input type="text" name="publisher" size="17">
-    <hr>
-    <span>Status</span>
-    <input type="text" name="status">
-    <span>Language</span>
-    <input type="text" name="language">
-    <span>Tags</span>
-    <input type="text" name="tags">
-    <span>Coordinates</span>
-    <input type="text" name="coordinates" size="10">
-    <br>
-    <span>Created</span>
-    <input type="text" name="created">
-    <span>Modified</span>
-    <input type="text" name="modified">
-    <br>
-    <span>Comment</span>
-    <br>
-    <textarea name="comment" rows="12" cols="80">
-    </textarea>
-</form>
-</div>
-</div>
+            <form id="detail_form">
+                <input id="_id" type="hidden" name="_id">
+                <span>Title</span>
+                <input type="text" name="title" size="80" required="required">
+                <br>
+                <span>ISBN</span>
+                <input type="text" pattern="^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)" name="isbn" size="13"
+                       required="required">
+                <span>Authors</span>
+                <input type="text" name="authors" size="42">
+                <span>Year</span>
+                <input type="number" name="year" size="5">
+                <span>Publisher</span>
+                <input type="text" name="publisher" size="17">
+                <hr>
+                <span>Status</span>
+                <input type="text" name="status">
+                <span>Language</span>
+                <input type="text" name="language">
+                <span>Tags</span>
+                <input type="text" name="tags">
+                <span>Coordinates</span>
+                <input type="text" name="coordinates" size="10">
+                <br>
+                <span>Created</span>
+                <input type="number" name="created">
+                <span>Modified</span>
+                <input type="number" name="modified">
+                <br>
+                <span>Comment</span>
+                <br>
+                <textarea id="bookcomment" name="comment" rows="12" cols="80"></textarea>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script lang="javascript">
@@ -191,11 +194,26 @@ $("#update_form").submit(function(e){
     bookId = $('#_id').val();
     console.log("Updating book with id", bookId );
 
+    update_data = details_get();
+    console.log("Update data:", update_data);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('UPDATE', 'http://localhost:5000/c-lib/api/v1.0/books/'+bookId, true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+    xhr.send(JSON.stringify(update_data));
+
+    xhr.onloadend = function () {
+        console.log("Done updating");
+        status_set("Update returned");
+    }
+
+/*
     $.ajax({
         url: 'http://localhost:5000/c-lib/api/v1.0/books/'+bookId,
         type: 'UPDATE',
         dataType : "json",
-        data : details_get(),
+        data : JSON.stringify(update_data),
         success: function(result) {
             status_set("Updated successfully.");
         },
@@ -204,23 +222,40 @@ $("#update_form").submit(function(e){
             status_set("Update failed :(");
         }
     });
-
+*/
 });
 
 function details_fill(book) {
+    console.log("Filling form with ", book);
     $.each(book,function(key,value) {
         DetailForm.find("input[name='"+key+"']").val(value);
     });
 
+    document.getElementById('bookcomment').value = book['comment'];
 }
 
 function details_get() {
-    var formObj = {};
-    var inputs = $('#detail_form').serializeArray();
-    $.each(inputs, function (i, input) {
-        formObj[input.name] = input.value;
-    });
-    return formObj;
+    var d = {};
+    var f = document.forms['detail_form'];
+
+    d = {'_id': f['_id'].value,
+        'isbn': f['isbn'].value,
+        'publisher': f['publisher'].value,
+        'language': f['language'].value,
+        'title': f['title'].value,
+        'authors': f['authors'].value,
+        'year': parseInt(f['year'].value),
+        'created': parseFloat(f['created'].value),
+        'modified': parseFloat(f['modified'].value),
+        'coordinates': [parseInt(f['coordinates'].value.split(",")[0]),
+                        parseInt(f['coordinates'].value.split(",")[1])],
+        'status': f['status'].value,
+        'tags': f['tags'].value,
+        'comment': f['comment'].value
+    }
+    console.log('Resulting data', d);
+
+    return d;
 }
 
 $("#isbn_form").submit(function(e){
@@ -265,8 +300,8 @@ $("#isbn_form").submit(function(e){
     });
        focus_isbn();
 });
-</script>
 
+</script>
 
 
 <!-- Built with kind love -->
